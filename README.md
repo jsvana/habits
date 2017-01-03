@@ -16,7 +16,14 @@ I'm really bad at remembering to do things, and I also get bored of doing the sa
 
 ## Installation
 
-    $ pip install -r requirements.txt
+```shell
+# Install dependencies
+$ pip install -r requirements.txt
+
+# Setup your config (Twilio/Trello keys, etc)
+$ cp habits/config.py.example habits/config.py
+$ $EDITOR habits/config.py
+```
 
 ## License
 
