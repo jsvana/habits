@@ -95,7 +95,7 @@ class Object(object):
             )
         )
 
-        sql = "INSERT INTO `{}` ({}) VALUES ({})".format(
+        sql = "INSERT OR REPLACE INTO `{}` ({}) VALUES ({})".format(
             self.table(),
             ",".join(["`{}`".format(k) for k in keys]),
             ",".join(["?"] * len(values)),
@@ -177,10 +177,11 @@ class Activity(Object):
     @classmethod
     def fields(cls):
         return {
-            "create_date": "TEXT DEFAULT CURRENT_DATE",
-            "card_id": "TEXT",
+            'create_date': 'TEXT DEFAULT CURRENT_DATE PRIMARY KEY',
+            'card_id': 'TEXT',
+            'completed': 'INTEGER DEFAULT 0',
         }
 
     @classmethod
     def required_fields(cls):
-        return ["create_date", "card_id", "completed"]
+        return ['create_date', 'card_id', 'completed']

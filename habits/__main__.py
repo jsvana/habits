@@ -42,17 +42,15 @@ def parse_args():
     return parser.parse_args()
 
 
+def today_activity():
+    today = datetime.datetime.utcnow().strftime('%Y-%m-%d')
+    return db.Activity.get_one(create_date=today)
+
+
 def main():
     args = parse_args()
 
     init_db()
-
-    # TODO(jsvana): put into webserver for text callback
-    # db.Activity(card_id='586afda4cc4b9b4ba002c10e').save()
-    # today = datetime.datetime.utcnow().strftime('%Y-%m-%d')
-    # for activity in db.Activity.get(create_date=today):
-        # print(activity.card_id)
-    # return False
 
     board = trello.Board.get(config.trello['board_id'])
     possible_activities = []
