@@ -9,7 +9,7 @@ import sys
 
 
 from twilio.rest import TwilioRestClient
-from . import (
+from .. import (
     config,
     db,
     trello,
