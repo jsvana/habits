@@ -1,0 +1,26 @@
+twilio = {
+    'account_sid': 'awesome-fake-sid',
+    'auth_token': 'awesome-fake-token',
+}
+
+phone_numbers = {
+    # Phone number you want the script to text
+    'user': '+15555555555',
+
+    # Your registered Twilio number
+    'twilio': '+15555555555',
+}
+
+trello = {
+    'key': 'awesome-trello-key',
+    'token': 'awesome-trello-token',
+
+    # ID of board containing lists to do
+    'board_id': 'super-secret-board-id',
+
+    # Names of lists containing things you want to get done
+    'todo_lists': [
+        'list-1',
+        'list-2',
+    ],
+}
