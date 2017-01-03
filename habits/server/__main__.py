@@ -1,17 +1,18 @@
 """
 Webserver for Twilio callbacks
 """
-
-print(__package__)
-
-from .. import config
-
-
 from flask import (
     Flask,
 
     jsonify,
     request,
+)
+
+
+from .. import (
+    config,
+    db,
+    trello,
 )
 
 
@@ -32,11 +33,18 @@ class InvalidUsageError(Exception):
         return rv
 
 
+def init_db():
+    """
+    Initialize DB tables
+    """
+    db.Activity.create_table()
+
+
 app = Flask(__name__)
 
 
 @app.errorhandler(InvalidUsageError)
-def handle_invalid_usage(error):
+def handle_error(error):
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
@@ -61,11 +69,27 @@ def message():
             status_code=403,
         )
 
-    print(body)
+    today_activity = db.Activity.today()
+    if not today_activity:
+        print('No activity found for today')
+        raise ValueError()
+
+    card = trello.Card.get(today_activity.card_id)
+    if not card:
+        print('No card found for ID {}'.format(today_activity.card_id))
+        raise ValueError()
+
+    card.comment(body)
+    today_activity.completed = True
+    today_activity.save()
 
     return 'Received'
 
 
-if __name__ == '__main__':
-    # app.run(debug=True, host='0.0.0.0')
+def main():
+    init_db()
     app.run(host='0.0.0.0')
+
+
+if __name__ == '__main__':
+    main()

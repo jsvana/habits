@@ -29,6 +29,9 @@ def send_message(client, text):
 
 
 def init_db():
+    """
+    Initialize DB tables
+    """
     db.Activity.create_table()
 
 
@@ -42,11 +45,6 @@ def parse_args():
     return parser.parse_args()
 
 
-def today_activity():
-    today = datetime.datetime.utcnow().strftime('%Y-%m-%d')
-    return db.Activity.get_one(create_date=today)
-
-
 def main():
     args = parse_args()
 
@@ -57,10 +55,12 @@ def main():
     for list_name in config.trello['todo_lists']:
         lst = board.list(list_name)
         for _, card in lst.cards.items():
-            possible_activities.append(card.name)
+            possible_activities.append(card)
 
     activity = random.choice(possible_activities)
-    message = "Today's activity: " + activity
+    message = "Today's activity: " + activity.name
+
+    db.Activity(card_id=activity.id).save()
 
     if args.no_text:
         print(message)
@@ -73,7 +73,6 @@ def main():
     send_message(client, message)
 
     return True
-
 
 
 if __name__ == "__main__":

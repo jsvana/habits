@@ -13,7 +13,7 @@ import requests
 from . import config
 
 
-API_BASE = 'https://api.trello.com/1/'
+API_BASE = 'https://api.trello.com/1'
 
 
 class Gettable(object):
@@ -68,11 +68,15 @@ class Gettable(object):
         setattr(self, singularize(key), get_item)
 
     @classmethod
+    def base_url(cls, obj_id):
+        return API_BASE + '/' + tableize(cls.__name__) + '/' + obj_id
+
+    @classmethod
     def get(cls, obj_id):
         """
         Get the given object by ID from the API
         """
-        url = API_BASE + '/' + tableize(cls.__name__) + '/' + obj_id
+        url = cls.base_url(obj_id)
         params = {
             'fields': ','.join(cls.FIELDS),
             'key': config.trello['key'],
@@ -117,3 +121,15 @@ class Card(Gettable):
 
     CHILDREN = {}
     FIELDS = ['name']
+
+    def comment(self, message):
+        print(self.base_url(self.id) + '/actions/comments')
+        r = requests.post(
+            self.base_url(self.id) + '/actions/comments',
+            data={
+                'text': message,
+                'key': config.trello['key'],
+                'token': config.trello['token'],
+            },
+        )
+        return r.json()

@@ -2,6 +2,7 @@
 Contains database-backed objects with convenience methods for fetching and
 saving.
 """
+import datetime
 import logging
 
 
@@ -132,13 +133,16 @@ class Object(object):
         values = []
         if constraints:
             sql += " WHERE"
+            clauses = []
             for key, value in constraints.items():
-                sql += " `{}` ".format(key)
+                clause = '`{}` '.format(key)
                 if value is None:
-                    sql += "IS NULL"
+                    clause += "IS NULL"
                 else:
-                    sql += "= ?"
+                    clause += "= ?"
                     values.append(value)
+                clauses.append(clause)
+            sql += ' {}'.format(' AND '.join(clauses))
 
         LOG.debug("[SELECT] " + sql)
 
@@ -185,3 +189,11 @@ class Activity(Object):
     @classmethod
     def required_fields(cls):
         return ['create_date', 'card_id', 'completed']
+
+    @classmethod
+    def today(cls):
+        now = datetime.datetime.utcnow().strftime('%Y-%m-%d')
+        return cls.get_one(
+            create_date=now,
+            completed=False,
+        )
