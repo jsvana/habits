@@ -2,7 +2,7 @@
 
 `Habits` is a tool to remind you to get random things done in small parts over many days.
 
-When setup in cron, the script will text you to do something from your lists. Then, after you've done something for that task, simply text the number back and it will comment on your Trello card with what you've done. That way, you can track what you've been doing over time.
+The script will text you daily to do something from your lists. Then, after you've done something for that task, simply text the number back and it will comment on your Trello card with what you've done. That way, you can track what you've been doing over time.
 
 `Habits` has two parts:
 
@@ -16,7 +16,7 @@ Each run of the script will pick a random activity from the lists in `config.tre
 
 ### Script
 
-Put 'er in a daily cron (probably to be run around the end of the workday):
+Configure your run time in `config.py` and then run
 
 `python -m habits.cron`
 

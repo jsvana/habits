@@ -1,3 +1,6 @@
+# Time to text every day
+run_time = '17:00'
+
 twilio = {
     'account_sid': 'awesome-fake-sid',
     'auth_token': 'awesome-fake-token',

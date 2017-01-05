@@ -6,9 +6,13 @@ import argparse
 import datetime
 import random
 import sys
+import time
 
 
+import schedule
 from twilio.rest import TwilioRestClient
+
+
 from .. import (
     config,
     db,
@@ -45,11 +49,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def main():
-    args = parse_args()
-
-    init_db()
-
+def text_task(args):
     board = trello.Board.get(config.trello['board_id'])
     possible_activities = []
     for list_name in config.trello['todo_lists']:
@@ -73,6 +73,18 @@ def main():
     send_message(client, message)
 
     return True
+
+
+def main():
+    args = parse_args()
+
+    init_db()
+
+    schedule.every().day.at(config.run_time).do(lambda: text_task(args))
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 
 if __name__ == "__main__":
